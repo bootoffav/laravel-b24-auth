@@ -18,7 +18,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "bootoffav\\laravelBitrix24Oauth": "src/"
+            "bootoffav\\laravelBitrix24Oauth\\": "src/"
         }
     }
 }
