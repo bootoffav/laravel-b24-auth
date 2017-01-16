@@ -1,0 +1,24 @@
+{
+    "name": "bootoffav/laravel-bitrix24-oauth",
+    "description": "Bitrix24 Oauth integration for laravel",
+    "type": "project",
+    "require": {
+        "php": ">=5.6.0",
+        "ext-curl": "*"
+    },
+    "require-dev": {
+        "phpunit": "5.6.*"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Aleksei Butov",
+            "email": "bootoffav@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "bootoffav\\laravel-bitrix24-oauth": "src/"
+        }
+    }
+}
