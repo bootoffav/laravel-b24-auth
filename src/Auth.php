@@ -1,6 +1,6 @@
 <?php
 
-namespace bootoffav\laravel\B24Auth;
+namespace bootoffav\laravel\B24;
 
 class Auth
 {
