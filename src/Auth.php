@@ -14,6 +14,7 @@ class Auth
                 '&code=' . $request['code']
             );
             $this->setCredentials($cred);
+            return back();
         }
 
         if (! $request->session()->has('b24_credentials')) {
@@ -28,6 +29,7 @@ class Auth
                 '&refresh_token=' . session('b24_credentials')->refresh_token
             );
             $this->setCredentials($cred);
+            return back();
         }
         
         return $next($request);
