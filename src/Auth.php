@@ -4,21 +4,23 @@ namespace bootoffav\laravel\B24;
 
 class Auth
 {
-    /**
-        * Handle an incoming request.
-        *
-        * @param  \Illuminate\Http\Request  $request
-        * @param  \Closure  $next
-        * @param  string|null  $guard
-        * @return mixed
-    */
     public function handle($request, \Closure $next)
     {
-        if (! session()->has('b24_credentials')) {
+        if ($request['code']) {
+            $cred = $this->getCredentials(
+                'https://oauth.bitrix.info/oauth/token/?grant_type=authorization_code' .
+                '&client_id=' . env('B24_CLIENT_ID') .
+                '&client_secret=' . env('B24_CLIENT_SECRET') .
+                '&code=' . $request['code']
+            );
+            $this->setCredentials($cred);
+        }
+
+        if (! $request->session()->has('b24_credentials')) {
             return redirect(env('B24_HOSTNAME').'/oauth/authorize/?client_id='.env('B24_CLIENT_ID'));
         }
 
-        if (time() > session('b24_credentials')->expires_at) {
+        if (time() > $request->session()->get('b24_credentials')->expires_at) {
             $cred = $this->getCredentials(
                 'https://oauth.bitrix.info/oauth/token/?grant_type=refresh_token' .
                 '&client_id=' . env('B24_CLIENT_ID') .
@@ -26,26 +28,20 @@ class Auth
                 '&refresh_token=' . session('b24_credentials')->refresh_token
             );
             $this->setCredentials($cred);
-        
-            return back();
         }
         
         return $next($request);
     }
 
-    public function getCredentials($request_string) : string
+    private function getCredentials($request_str) : string
     {
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $request_string);
+        curl_setopt($ch, CURLOPT_URL, $request_str);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
         return curl_exec($ch);
     }
 
-    /**
-     * @param string $credentials return value from $this->getCredentials
-     * @return  void
-     */
     private function setCredentials(string $credentials)
     {
         $credentials = json_decode($credentials);
