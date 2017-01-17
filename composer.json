@@ -1,5 +1,5 @@
 {
-    "name": "bootoffav/laravel-bitrix24-oauth",
+    "name": "bootoffav/laravelB24Auth",
     "description": "Bitrix24 Oauth integration for laravel",
     "type": "project",
     "require": {
@@ -18,7 +18,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "bootoffav\\laravelBitrix24Oauth\\": "src/"
+            "bootoffav\\laravel\\B24Auth": "src/"
         }
     }
 }
