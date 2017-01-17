@@ -1,5 +1,5 @@
 {
-    "name": "bootoffav/laravel-bitrix24-oauth",
+    "name": "bootoffav/laravel-b24-auth",
     "description": "Bitrix24 laravel Oauth middleware",
     "type": "library",
     "require": {
