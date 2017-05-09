@@ -11,8 +11,8 @@ class Auth
             $this->setCredentials(
                 $this->getCredentials(
                 'https://oauth.bitrix.info/oauth/token/?grant_type=authorization_code' .
-                '&client_id=' . env('B24_CLIENT_ID') .
-                '&client_secret=' . env('B24_CLIENT_SECRET') .
+                '&client_id=' . config('app.b24_client_id') .
+                '&client_secret=' . config('app.b24_client_secret') .
                 '&code=' . $request['code']
                 )
             );
@@ -21,7 +21,7 @@ class Auth
 
         // obtain new token (step 1)
         if (! $request->session()->has('b24_credentials')) {
-            return redirect(env('B24_HOSTNAME').'/oauth/authorize/?client_id='.env('B24_CLIENT_ID'));
+            return redirect(config('app.b24_hostname').'/oauth/authorize/?client_id='.config('app.b24_client_id'));
         }
 
         // refresh token
@@ -29,8 +29,8 @@ class Auth
             $this->setCredentials(
                 $this->getCredentials(
                     'https://oauth.bitrix.info/oauth/token/?grant_type=refresh_token' .
-                    '&client_id=' . env('B24_CLIENT_ID') .
-                    '&client_secret=' . env('B24_CLIENT_SECRET') .
+                    '&client_id=' . config('app.b24_client_id') .
+                    '&client_secret=' . config('app.b24_client_secret') .
                     '&refresh_token=' . session('b24_credentials')->refresh_token
                 )
             );
@@ -40,7 +40,7 @@ class Auth
         return $next($request);
     }
 
-    private function getCredentials($request_str) : string
+    private function getCredentials($request_str)
     {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $request_str);
@@ -48,7 +48,7 @@ class Auth
         return curl_exec($ch);
     }
 
-    private function setCredentials(string $cred)
+    private function setCredentials($cred)
     {
         $cred = json_decode($cred);
         $cred->expires_at = time() + $cred->expires_in;
