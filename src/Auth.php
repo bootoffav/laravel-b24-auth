@@ -25,7 +25,7 @@ class Auth
         }
 
         // refresh token
-        if (time() > $request->session()->get('b24_credentials')->expires_at) {
+        if (time() > $request->session()->get('b24_credentials')->expires) {
             $this->setCredentials(
                 $this->getCredentials(
                     'https://oauth.bitrix.info/oauth/token/?grant_type=refresh_token' .
@@ -50,8 +50,6 @@ class Auth
 
     private function setCredentials($cred)
     {
-        $cred = json_decode($cred);
-        $cred->expires_at = time() + $cred->expires_in;
-        session()->put('b24_credentials', $cred);
+        session()->put('b24_credentials', json_decode($cred));
     }
 }
