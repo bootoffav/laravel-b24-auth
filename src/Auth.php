@@ -11,32 +11,32 @@ class Auth
             $this->setCredentials(
                 $this->getCredentials(
                 'https://oauth.bitrix.info/oauth/token/?grant_type=authorization_code' .
-                '&client_id=' . config('app.b24_client_id') .
-                '&client_secret=' . config('app.b24_client_secret') .
+                '&client_id=' . env('B24_CLIENT_ID') .
+                '&client_secret=' . env('B24_CLIENT_SECRET') .
                 '&code=' . $request['code']
-                )
-            );
-            return back();
+                )                       
+            );                          
+            return back();              
         }
 
         // obtain new token (step 1)
         if (! $request->session()->has('b24_credentials')) {
-            return redirect(config('app.b24_hostname').'/oauth/authorize/?client_id='.config('app.b24_client_id'));
+            return redirect(env('B24_HOSTNAME').'/oauth/authorize/?client_id='.env('B24_CLIENT_ID'));
         }
 
         // refresh token
-        if (time() > $request->session()->get('b24_credentials')->expires) {
+        if (time() > $request->session()->get('b24_credentials')->expires_at) {
             $this->setCredentials(
                 $this->getCredentials(
                     'https://oauth.bitrix.info/oauth/token/?grant_type=refresh_token' .
-                    '&client_id=' . config('app.b24_client_id') .
-                    '&client_secret=' . config('app.b24_client_secret') .
+                    '&client_id=' . env('B24_CLIENT_ID') .
+                    '&client_secret=' . env('B24_CLIENT_SECRET') .
                     '&refresh_token=' . session('b24_credentials')->refresh_token
-                )
-            );
-            return back();
+                )                           
+            );                              
+            return back();                  
         }
-        
+
         return $next($request);
     }
 
@@ -53,3 +53,5 @@ class Auth
         session()->put('b24_credentials', json_decode($cred));
     }
 }
+
+?>
